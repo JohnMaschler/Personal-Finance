@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Overview</h1>
+    <h2>Monthly Spending</h2>
+    <canvas id="monthly-spending-chart"></canvas><!--canvas element for monthly spending-->
+    <h2>Spending by Category</h2>
+    <canvas id="spending-by-category-chart"></canvas><!-- canvas element to hold the spending by category chart -->
+</div>
+
+<!-- load chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+fetch('/monthly-spending-data')// fetch monthly spending data from server
+    .then(response => response.json())
+    .then(data => {
+        new Chart(document.getElementById('monthly-spending-chart'), {//create new chart for monthly spending
+            type: 'line',//line chart
+            data: {
+                labels: data.months,
+                datasets: [{
+                    label: 'Spending',
+                    data: data.spending,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+fetch('/spending-by-category-data')//fetch the spending by category data from the server
+    .then(response => response.json())
+    .then(data => {
+        new Chart(document.getElementById('spending-by-category-chart'), {// create new pie chart to show the spending by category
+            type: 'pie',
+            data: {
+                labels: data.categories,
+                datasets: [{
+                    label: 'Spending',
+                    data: data.spending,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',//only using 3 colors, could use more
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        });
+    });
+</script>
+{% endblock %}

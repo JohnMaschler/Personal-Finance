@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 align="center">Transactions</h1>
+    <div style="text-align:right;">
+        <button class="btn btn-primary" onclick="addDeleteButtons()">Edit</button><!--edit button will show delete button-->
+    </div>    
+    <table class="table"><!--create table to display each transaction-->
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Type</th>
+                <th scope="col">Category</th>
+                <th scope="col"></th> <!-- Empty column for delete buttons -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}<!--iterate through each transaction-->
+                <tr id="transaction-{{ transaction.id }}">
+                    <td>{{ transaction.date }}</td>
+                    <td>${{ '{:.2f}'.format(transaction.amount) }}</td>
+                    <td>{{ transaction.transaction_type }}</td>
+                    <td>{{ transaction.category_id }}</td>
+                    <td></td> <!-- Empty cell for delete button -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
